@@ -1,8 +1,14 @@
+using Contracts;
+using Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddSingleton<IBlockedCountryRepository, BlockedCountryRepository>();
+
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();

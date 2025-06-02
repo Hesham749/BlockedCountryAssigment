@@ -1,0 +1,24 @@
+﻿using System.Collections.Concurrent;
+using BlockedCountryAPI.Entities.Models;
+using Contracts;
+
+namespace Infrastructure;
+
+public class BlockedCountryRepository : IBlockedCountryRepository
+{
+    private readonly ConcurrentDictionary<string, BlockedCountry> _blockedCountries = new();
+
+    public bool Add(BlockedCountry country) => _blockedCountries.TryAdd(country.CountryCode.ToUpper(), country);
+
+    public bool Remove(string countryCode) => _blockedCountries.TryRemove(countryCode.ToUpper(), out _);
+
+    public bool Exists(string countryCode) => _blockedCountries.ContainsKey(countryCode.ToUpper());
+
+    public BlockedCountry? GetByCode(string countryCode)
+    {
+        _blockedCountries.TryGetValue(countryCode.ToUpper(), out var country);
+        return country;
+    }
+
+    public IEnumerable<BlockedCountry> GetAll() => _blockedCountries.Values;
+}
