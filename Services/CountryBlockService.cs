@@ -41,4 +41,12 @@ public class CountryBlockService(ICountryService countryService,
 
         return _mapper.ToDto(blockedCountry);
     }
+
+    public void UnBlockCountry(UnBlockCountryRequest unBlockCountryRequest)
+    {
+        var unBlockedCountry = countryRepository.Remove(unBlockCountryRequest.CountryCode);
+
+        if (!unBlockedCountry)
+            throw new CountryNotBlockedException(unBlockCountryRequest.CountryCode);
+    }
 }

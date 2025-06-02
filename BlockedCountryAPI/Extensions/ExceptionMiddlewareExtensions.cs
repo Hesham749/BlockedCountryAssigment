@@ -11,6 +11,7 @@ public static class ExceptionMiddlewareExtensions
        {
            InvalidCountryCodeException => StatusCodes.Status422UnprocessableEntity,
            AlreadyBlockedException => StatusCodes.Status409Conflict,
+           NotFoundException => StatusCodes.Status404NotFound,
            _ => StatusCodes.Status500InternalServerError,
        };
 
