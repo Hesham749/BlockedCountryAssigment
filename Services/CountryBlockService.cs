@@ -16,20 +16,25 @@ public class CountryBlockService(ICountryService countryService,
 
     public BlockCountryResponse BlockCountry(BlockCountryRequest blockCountryRequest)
     {
-        var countryName = countryService.GetCountryName(blockCountryRequest.CountryCode);
+        if (countryRepository.Exists(blockCountryRequest.CountryCode))
+            throw new AlreadyBlockedException(blockCountryRequest.CountryCode);
 
+        var countryName = countryService.GetCountryName(blockCountryRequest.CountryCode);
         var blockedCountry = new BlockedCountry(blockCountryRequest.CountryCode, countryName);
 
         var addedCountry = countryRepository.Add(blockedCountry);
 
         if (!addedCountry)
-            throw new AlreadyBlockedException(blockCountryRequest.CountryCode);
+            throw new Exception("Failed to add country");
 
         return _mapper.ToDto(blockedCountry);
     }
 
     public BlockCountryResponse BlockTemporarily(TemporalBlockRequest blockCountryRequest)
     {
+        if (countryRepository.Exists(blockCountryRequest.CountryCode))
+            throw new AlreadyBlockedException(blockCountryRequest.CountryCode);
+
         var countryName = countryService.GetCountryName(blockCountryRequest.CountryCode);
 
         var blockedCountry = new BlockedCountry
@@ -38,7 +43,7 @@ public class CountryBlockService(ICountryService countryService,
         var addedCountry = countryRepository.Add(blockedCountry);
 
         if (!addedCountry)
-            throw new AlreadyBlockedException(blockCountryRequest.CountryCode);
+            throw new Exception("Failed to add country");
 
         return _mapper.ToDto(blockedCountry);
     }
@@ -62,9 +67,12 @@ public class CountryBlockService(ICountryService countryService,
 
     public void UnBlockCountry(UnBlockCountryRequest unBlockCountryRequest)
     {
+        if (!countryRepository.Exists(unBlockCountryRequest.CountryCode))
+            throw new CountryNotBlockedException(unBlockCountryRequest.CountryCode);
+
         var unBlockedCountry = countryRepository.Remove(unBlockCountryRequest.CountryCode);
 
         if (!unBlockedCountry)
-            throw new CountryNotBlockedException(unBlockCountryRequest.CountryCode);
+            throw new Exception("Failed to remove country");
     }
 }
