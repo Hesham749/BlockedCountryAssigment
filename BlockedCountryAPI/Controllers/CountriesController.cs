@@ -1,14 +1,24 @@
 ﻿using BlockedCountryAPI.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
+using Shared;
 using Shared.DTOs;
 
 namespace BlockedCountryAPI.Controllers;
 
 [Route("api/countries")]
+[Produces("application/json")]
 [ApiController]
 public class CountriesController(ICountryBlockService service) : ControllerBase
 {
+    [HttpGet("blocked")]
+    public ActionResult<PagedResult<BlockCountryResponse>> GetBlockedCountries([FromQuery] PaginatedQueryParameters query)
+    {
+        var result = service.GetBlockedCountries(query);
+        return Ok(result);
+    }
+
+
     [HttpPost("block")]
     public IActionResult BlockCountry([FromBody] BlockCountryRequest request)
     {

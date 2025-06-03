@@ -20,5 +20,20 @@ public class BlockedCountryRepository : IBlockedCountryRepository
         return country;
     }
 
-    public IEnumerable<BlockedCountry> GetAll() => _blockedCountries.Values;
+    public (int total, IEnumerable<BlockedCountry> blockedCountries) GetAllWithCount(int page = 1, int pageSize = 20, string? countryCode = null, string? countryName = null)
+    {
+        var query = _blockedCountries.Values.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(countryCode))
+            query = query.Where(c => c.CountryCode.Contains(countryCode, StringComparison.CurrentCultureIgnoreCase));
+
+        if (!string.IsNullOrWhiteSpace(countryName))
+            query = query.Where(c => c.CountryName.Contains(countryName, StringComparison.OrdinalIgnoreCase));
+
+        var total = query.Count();
+
+        var blockedCountries = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+        return (total, blockedCountries);
+    }
 }

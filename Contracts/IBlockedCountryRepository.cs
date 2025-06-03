@@ -12,5 +12,5 @@ public interface IBlockedCountryRepository
 
     BlockedCountry? GetByCode(string countryCode);
 
-    IEnumerable<BlockedCountry> GetAll();
+    (int total, IEnumerable<BlockedCountry> blockedCountries) GetAllWithCount(int page = 1, int pageSize = 20, string? countryCode = null, string? countryName = null);
 }

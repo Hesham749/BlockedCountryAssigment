@@ -14,7 +14,7 @@ public class TemporalBlockCleanupService(IServiceProvider serviceProvider) : Bac
             var repo = scope.ServiceProvider.GetRequiredService<IBlockedCountryRepository>();
 
             var now = DateTime.UtcNow;
-            var expiredCountries = repo.GetAll()
+            var expiredCountries = repo.GetAllWithCount().blockedCountries
                 .Where(c => c.IsTemporary && c.DurationMinutes.HasValue && c.ExpiresAt <= now)
                 .ToList();
 

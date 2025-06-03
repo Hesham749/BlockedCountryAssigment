@@ -1,4 +1,5 @@
-﻿using Shared.DTOs;
+﻿using Shared;
+using Shared.DTOs;
 
 namespace Services.Contracts;
 
@@ -9,4 +10,6 @@ public interface ICountryBlockService
     BlockCountryResponse BlockTemporarily(TemporalBlockRequest blockCountryRequest);
 
     void UnBlockCountry(UnBlockCountryRequest unBlockCountryRequest);
+
+    PagedResult<BlockCountryResponse> GetBlockedCountries(PaginatedQueryParameters query);
 }
