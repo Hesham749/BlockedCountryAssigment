@@ -15,5 +15,6 @@ public static class ServiceExtensions
 
         services.AddSingleton<ICountryService, CountryService>();
 
+        services.AddHostedService<TemporalBlockCleanupService>();
     }
 }
