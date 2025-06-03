@@ -1,5 +1,4 @@
-﻿using BlockedCountryAPI.Extensions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using Shared;
 using Shared.DTOs;
@@ -46,15 +45,12 @@ public class CountriesController(ICountryBlockService service) : ControllerBase
     [HttpDelete("block/{countryCode}")]
     public IActionResult UnBlockCountry([FromRoute] string countryCode)
     {
-        if (string.IsNullOrWhiteSpace(countryCode))
-            return BadRequest($"{nameof(countryCode)} can't be null or empty.");
+        var unBlockCountryRequest = new UnBlockCountryRequest { CountryCode = countryCode };
 
-        var unBlockContryRequest = new UnBlockCountryRequest { CountryCode = countryCode };
-
-        if (!ModelState.TryValidateObjectAndAddErrors(unBlockContryRequest))
+        if (!TryValidateModel(unBlockCountryRequest))
             return UnprocessableEntity(ModelState);
 
-        service.UnBlockCountry(unBlockContryRequest);
+        service.UnBlockCountry(unBlockCountryRequest);
 
         return NoContent();
     }

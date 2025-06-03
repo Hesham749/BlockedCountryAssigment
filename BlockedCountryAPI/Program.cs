@@ -1,7 +1,6 @@
 using BlockedCountryAPI.Extensions;
-using Contracts;
-using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +10,7 @@ builder.Services.AddControllers();
 
 builder.Services.Configure<ApiBehaviorOptions>(op => op.SuppressModelStateInvalidFilter = true);
 
-builder.Services.AddSingleton<IBlockedCountryRepository, BlockedCountryRepository>();
+builder.Services.Configure<GeoApiOptions>(builder.Configuration.GetSection("GeoApi"));
 
 builder.Services.AddServices();
 

@@ -16,5 +16,7 @@ public static class ServiceExtensions
         services.AddSingleton<ICountryService, CountryService>();
 
         services.AddHostedService<TemporalBlockCleanupService>();
+
+        services.AddHttpClient<IGeoLookupService, GeoLookupService>();
     }
 }
