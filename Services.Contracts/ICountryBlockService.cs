@@ -11,5 +11,5 @@ public interface ICountryBlockService
 
     void UnBlockCountry(UnBlockCountryRequest unBlockCountryRequest);
 
-    PagedResult<BlockCountryResponse> GetBlockedCountries(PaginatedQueryParameters query);
+    PagedResult<BlockCountryResponse> GetBlockedCountries(PaginatedBlockedCountriesQueryParameters query);
 }

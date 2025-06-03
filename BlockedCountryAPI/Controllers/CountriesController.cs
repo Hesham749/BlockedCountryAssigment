@@ -11,7 +11,7 @@ namespace BlockedCountryAPI.Controllers;
 public class CountriesController(ICountryBlockService service) : ControllerBase
 {
     [HttpGet("blocked")]
-    public ActionResult<PagedResult<BlockCountryResponse>> GetBlockedCountries([FromQuery] PaginatedQueryParameters query)
+    public ActionResult<PagedResult<BlockCountryResponse>> GetBlockedCountries([FromQuery] PaginatedBlockedCountriesQueryParameters query)
     {
         var result = service.GetBlockedCountries(query);
         return Ok(result);

@@ -18,5 +18,10 @@ public static class ServiceExtensions
         services.AddHostedService<TemporalBlockCleanupService>();
 
         services.AddHttpClient<IGeoLookupService, GeoLookupService>();
+
+        services.AddSingleton<IAttemptLogRepository, AttemptLogRepository>();
+
+        services.AddScoped<ILogService, LogService>();
+
     }
 }

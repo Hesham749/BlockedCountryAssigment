@@ -43,7 +43,7 @@ public class CountryBlockService(ICountryService countryService,
         return _mapper.ToDto(blockedCountry);
     }
 
-    public PagedResult<BlockCountryResponse> GetBlockedCountries(PaginatedQueryParameters query)
+    public PagedResult<BlockCountryResponse> GetBlockedCountries(PaginatedBlockedCountriesQueryParameters query)
     {
         var (total, blockedCountries) = countryRepository
             .GetAllWithCount(query.Page, query.PageSize, query.CountryCode, query.CountryName);
