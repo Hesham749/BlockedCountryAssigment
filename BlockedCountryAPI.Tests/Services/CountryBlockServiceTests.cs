@@ -56,4 +56,49 @@ public class CountryBlockServiceTests
         Assert.Equal($"Country {request.CountryCode} is already blocked.", ex.Message);
         _repoMock.Verify(r => r.Add(It.IsAny<BlockedCountry>()), Times.Never);
     }
+
+
+    [Fact]
+    public void UnBlockCountry_Should_Throw_When_Country_Does_Not_Exist()
+    {
+        // Arrange
+        var request = new UnBlockCountryRequest { CountryCode = "FR" };
+        _repoMock.Setup(r => r.Exists(request.CountryCode)).Returns(false);
+
+        // Act & Assert
+        var ex = Assert.Throws<CountryNotBlockedException>(() => _service.UnBlockCountry(request));
+
+        Assert.Equal($"Country {request.CountryCode} is not blocked.", ex.Message);
+        _repoMock.Verify(r => r.Remove(It.IsAny<string>()), Times.Never);
+    }
+
+    [Fact]
+    public void UnBlockCountry_Should_Throw_When_Remove_Fails()
+    {
+        // Arrange
+        var request = new UnBlockCountryRequest { CountryCode = "DE" };
+        _repoMock.Setup(r => r.Exists(request.CountryCode)).Returns(true);
+        _repoMock.Setup(r => r.Remove(request.CountryCode)).Returns(false);
+
+        // Act & Assert
+        var ex = Assert.Throws<Exception>(() => _service.UnBlockCountry(request));
+
+        Assert.Equal("Failed to remove country", ex.Message);
+        _repoMock.Verify(r => r.Remove(request.CountryCode), Times.Once);
+    }
+
+    [Fact]
+    public void UnBlockCountry_Should_Remove_When_Country_Exists()
+    {
+        // Arrange
+        var request = new UnBlockCountryRequest { CountryCode = "JP" };
+        _repoMock.Setup(r => r.Exists(request.CountryCode)).Returns(true);
+        _repoMock.Setup(r => r.Remove(request.CountryCode)).Returns(true);
+
+        // Act
+        _service.UnBlockCountry(request);
+
+        // Assert
+        _repoMock.Verify(r => r.Remove(request.CountryCode), Times.Once);
+    }
 }
